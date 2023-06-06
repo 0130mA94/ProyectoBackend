@@ -18,9 +18,9 @@ class productManager {
             };
             this.products.push(product);
             console.log(`Producto ${code} creado`)
-            //     return `Producto ${code} creado`
-            // } else {
-            //     console.log(`El producto ya existe`)
+            return `Producto ${code} creado`
+        } else {
+            console.log(`El producto ya existe`)
         }
     }
 
@@ -37,13 +37,14 @@ class productManager {
     #getProduct(idProduct) {
         return this.products.find(product => product.id === idProduct);
     }
+    getProductById()
 }
 const manager = new productManager()
 
 
-manager.addProduct("Batman: Año uno", "DC black label", 9.99,"./Img/BatmanAñoUno.jpg", 10 );
-manager.addProduct("Batman: La corte de los búhos", "DC black label", 25,"./Img/LaCorteDeLosBuhos.wep", 15 )
-console.log(productManager);
+manager.addProduct("Batman: Año uno", "DC black label", 9.99, "./Img/BatmanAñoUno.jpg", 10);
+manager.addProduct("Batman: La corte de los búhos", "DC black label", 25, "./Img/LaCorteDeLosBuhos.wep", 15)
+console.log(manager-getProducts);
 
 manager.getProducts()
-manager.getProductbyId(2);
+//manager.getProductbyId(2);
