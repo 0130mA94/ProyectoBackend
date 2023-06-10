@@ -6,9 +6,9 @@ class productManager {
     }
     addProduct(title, description, price, thumbnail, code, stock) {
         const checkProduct = this.#getProduct(code)
-        if (checkProduct === "OK") {
+        if (!checkProduct) {
             const product = {
-                id: this.getMaxId() + 1,
+                id: this.#getMaxId() + 1,
                 code,
                 title,
                 description,
@@ -21,14 +21,6 @@ class productManager {
             return `Producto ${code} creado`
         } else {
             console.log(`El producto ya existe`)
-        }
-    }
-    addTitle(idProduct, idTitle){
-        const product = this.#getProduct(idProduct);
-        if(title) {
-            if(!title.stock.includes(idTitle)) title.stock.push(idTitle);
-        } else{
-            console.log("este titulo no existe");
         }
     }
 
@@ -45,16 +37,13 @@ class productManager {
     #getProduct(idProduct) {
         return this.products.find(product => product.id === idProduct);
     }
-    getProductById(){
-
-    }
 }
 const manager = new productManager()
 
 
-manager.addProduct("Batman: Año uno", "DC black label", 9.99, "./Img/BatmanAñoUno.jpg", 10);
-manager.addProduct("Batman: La corte de los búhos", "DC black label", 25, "./Img/LaCorteDeLosBuhos.wep", 15)
-console.log(manager.getProducts);
+manager.addProduct("Batman: Año uno", "DC black label", 9.99, "./Img/BatmanAñoUno.jpg","DC123", 10);
+manager.addProduct("Batman: La corte de los búhos", "DC black label", 25, "./Img/LaCorteDeLosBuhos.wep","DC125", 15 )
+console.log(manager.addProduct);
 
-manager.getProducts()
-//manager.getProductbyId(2);
+manager.getProducts();
+
