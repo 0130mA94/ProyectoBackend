@@ -38,9 +38,32 @@ class productManager {
     async createProduct(product) {
         try {
             const productsFile = await this.getProducts();
-            product.id = this.#nextId;
-            this.#nextId++;
+            if (!TodosLosCampos) {
+                console.log("todos los campos son obligatorios");
+                return;
+            }
+            let codeExists = this.products.some((element) => {
+                return element.code === codeInserted;
+            });
+            if (codeExists) {
+                console.log("producto existente");
+                return;
+            }
+            if (TodosLosCampos && !codeExists) {
+                const product = {
+                    id: this.#nextId,
+                    title,
+                    version,
+                    price,
+                    editorial,
+                    image,
+                    stock,
+                    code
+                }
+
+            }
             productsFile.push(product);
+            this.#nextId++;
             await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
             return product;
         } catch (error) {
@@ -48,52 +71,129 @@ class productManager {
         }
 
     }
-    getProductById(id) {
-        return this.products.find((product) => product.id === id);
-    }
+    async getProductById(id) {
+        try {
+            if (fs.existsSync(this.path)) {
+                const products = await fs.promises.readFile(this.path, "utf-8");
+                const productsjs = JSON.parse(products);
+                return productsjs;
+            } else {
+                return []
+            }
+        }
+        catch
+        (error) {
+            console.log(error);
+        }
 
-}
+    }
+    async updateProduct(id, updated) {
+        try {
+            await this.getProducts();
+            let index = this.products.findIndex((Element) => {
+                return Element.id === id;
+            });
+            if(updated.code){
+                let codeExists = false;
+                codeExists = this.products.some((item) => item.code === updated.code);
+                if (!codeExists) {
+                    let modifiedProducts = {
+                        ...this.products[index],
+                        ...updated
+                    }
+                    this.products[index] = modifiedProducts;
+                    this.saveProducts(this.products);
+            
+                } else {
+                    console.log("Este producto ya existe");
+                    return;
+                }
+            } else {
+                let modifiedProducts = {
+                    ...this.products[index],
+                    ...updated
+                }
+                this.products[index] = modifiedProducts;
+                this.saveProducts(this.products);
+                
+            }
+            
+        } catch (error) {
+            console.log(error);
+        }
+
+
+        }
+        async deleteProduct(id) {
+            try {
+                await this.getProducts();
+    
+                if(this.products.some(element => element.id === id)){
+                    let index = this.products.findIndex((element) => {
+                        return element.id === id;
+                    });
+                
+                    this.products.splice(index, 1);
+                    await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+                    return;
+                }else{
+                    console.log("este producto no existe");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    
+        async saveProducts(elements){
+            try {
+                const productsJS = JSON.stringify(elements);
+                await fs.promises.writeFile(this.path, productsJS);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+    
+    
 
 const manager = new productManager("./products.json");
 
 const product1 = {
-    name: "Batman: Año uno",
+    
+    title: "Batman: Año uno",
     version: "Black Label",
     price: 12,
     editorial: "DC",
     image: "./Img/BatmanAñoUno.jpg",
     stock: 20,
-    code: "125DC",
-    id: 1
+    code: "125DC"
 }
 
 const product2 = {
-    name: "Batman: La corte de los búhos",
+   
+    title: "Batman: La corte de los búhos",
     version: "Black Label",
     price: 9.99,
     editorial: "DC",
     image: "./Img/LaCorteDelosBuhos.webp",
     stock: 20,
-    code: "123DC",
-    id: 2
+    code: "123DC"
+
 }
 
 const test = async () => {
     const getProducts = await manager.getProducts()
     console.log("primera compra: ", getProducts);
-    await manager.createProduct(product1);
-    const getProducts2 = await manager.getProducts()
-    console.log("segunda compra: ", getProducts2);
-    await manager.createProduct(product2);
-    const getProducts3 = await manager.getProducts()
-    console.log("tercera compra: ", getProducts3);
-
-    const productId = 2;
-    await manager.getProducts();
-    const product = manager.getProductById(productId);
-    console.log(`Producto con ID ${productId}:`, product);
+    //await manager.createProduct(product1);
+    // const getProducts2 = await manager.getProducts()
+    // console.log("segunda compra: ", getProducts2);
+    // await manager.createProduct(product2);
+    // const getProducts3 = await manager.getProducts()
+    // console.log("tercera compra: ", getProducts3);
 
 }
+
+
 
 test()
 
