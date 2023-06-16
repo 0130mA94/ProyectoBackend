@@ -38,27 +38,30 @@ class productManager {
     async createProduct(product) {
         try {
             const productsFile = await this.getProducts();
-            if (!TodosLosCampos) {
-                console.log("todos los campos son obligatorios");
-                return;
+            function todosLosProductos() {
+
+                if (!title || !description || !price || !thumbnail || !code || !stock) {
+                    console.log("El producto está incompleto.");
+                } return true;
+
             }
             let codeExists = this.products.some((element) => {
-                return element.code === codeInserted;
+                return element.code === product.code;
             });
             if (codeExists) {
                 console.log("producto existente");
                 return;
             }
-            if (TodosLosCampos && !codeExists) {
-                const product = {
+            if (todosLosCampos && !codeExists) {
+                const newProduct = {
                     id: this.#nextId,
-                    title,
-                    version,
-                    price,
-                    editorial,
-                    image,
-                    stock,
-                    code
+                    title: product.title,
+                    description: product.description,
+                    price: product.price,
+                    editorial: product.editorial,
+                    thumbnail: product.thumbnail,
+                    stock: product.stock,
+                    code: product.code
                 }
 
             }
@@ -76,16 +79,15 @@ class productManager {
             if (fs.existsSync(this.path)) {
                 const products = await fs.promises.readFile(this.path, "utf-8");
                 const productsjs = JSON.parse(products);
-                return productsjs;
+                const product = productsjs.find((product) => product.id === id);
+                return product || null;
             } else {
-                return []
+                return null;
             }
-        }
-        catch
-        (error) {
+        } catch (error) {
             console.log(error);
+            return null;
         }
-
     }
     async updateProduct(id, updated) {
         try {
@@ -93,7 +95,7 @@ class productManager {
             let index = this.products.findIndex((Element) => {
                 return Element.id === id;
             });
-            if(updated.code){
+            if (updated.code) {
                 let codeExists = false;
                 codeExists = this.products.some((item) => item.code === updated.code);
                 if (!codeExists) {
@@ -103,7 +105,7 @@ class productManager {
                     }
                     this.products[index] = modifiedProducts;
                     this.saveProducts(this.products);
-            
+
                 } else {
                     console.log("Este producto ya existe");
                     return;
@@ -115,75 +117,77 @@ class productManager {
                 }
                 this.products[index] = modifiedProducts;
                 this.saveProducts(this.products);
-                
+
             }
-            
+
         } catch (error) {
             console.log(error);
         }
 
 
-        }
-        async deleteProduct(id) {
-            try {
-                await this.getProducts();
-    
-                if(this.products.some(element => element.id === id)){
-                    let index = this.products.findIndex((element) => {
-                        return element.id === id;
-                    });
-                
-                    this.products.splice(index, 1);
-                    await fs.promises.writeFile(this.path, JSON.stringify(this.products));
-                    return;
-                }else{
-                    console.log("este producto no existe");
-                }
-            } catch (error) {
-                console.log(error);
+    }
+    async deleteProduct(id) {
+        try {
+            await this.getProducts();
+
+            if (this.products.some(element => element.id === id)) {
+                let index = this.products.findIndex((element) => {
+                    return element.id === id;
+                });
+
+                this.products.splice(index, 1);
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+                return;
+            } else {
+                console.log("este producto no existe");
             }
-        }
-    
-        async saveProducts(elements){
-            try {
-                const productsJS = JSON.stringify(elements);
-                await fs.promises.writeFile(this.path, productsJS);
-            } catch (error) {
-                console.log(error);
-            }
+        } catch (error) {
+            console.log(error);
         }
     }
-    
-    
+
+    async saveProducts(elements) {
+        try {
+            const productsJS = JSON.stringify(elements);
+            await fs.promises.writeFile(this.path, productsJS);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+
 
 const manager = new productManager("./products.json");
 
 const product1 = {
-    
+
     title: "Batman: Año uno",
-    version: "Black Label",
+    description: "Black Label",
     price: 12,
     editorial: "DC",
-    image: "./Img/BatmanAñoUno.jpg",
+    thumbnail: "./Img/BatmanAñoUno.jpg",
     stock: 20,
     code: "125DC"
 }
 
 const product2 = {
-   
+
     title: "Batman: La corte de los búhos",
-    version: "Black Label",
+    description: "Black Label",
     price: 9.99,
     editorial: "DC",
-    image: "./Img/LaCorteDelosBuhos.webp",
+    thumbnail: "./Img/LaCorteDelosBuhos.webp",
     stock: 20,
     code: "123DC"
 
 }
 
 const test = async () => {
-    const getProducts = await manager.getProducts()
-    console.log("primera compra: ", getProducts);
+    const product = await manager.getProductById(2);
+    console.log(product);
+    //const getProducts = await manager.getProducts()
+    //console.log("primera compra: ", getProductsById(1));
     //await manager.createProduct(product1);
     // const getProducts2 = await manager.getProducts()
     // console.log("segunda compra: ", getProducts2);
@@ -193,6 +197,18 @@ const test = async () => {
 
 }
 
+const testDeleteProduct = async () => {
+    const productsBeforeDelete = await manager.getProducts();
+    console.log("productos antes de eliminar", productsBeforeDelete);
+    const productIdDelete = 1;
+    await manager.deleteProduct(productIdDelete);
+    console.log("producto eliminado con exito");
+
+    const productsAfterDelete = await manager.getProducts();
+    console.log("productos despues de eliminar: ", productsAfterDelete)
+};
+
+testDeleteProduct();
 
 
 test()
