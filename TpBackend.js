@@ -182,6 +182,9 @@ const product2 = {
 }
 
 const test = async () => {
+    await manager.createProduct(product1)
+    await manager.createProduct(product2)
+    await manager.updateProduct(2, product2Modify)
     const product = await manager.getProductById(2);
     console.log(product);
     //const getProducts = await manager.getProducts()
