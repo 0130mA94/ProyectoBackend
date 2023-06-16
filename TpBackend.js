@@ -23,6 +23,7 @@ class productManager {
             if (fs.existsSync(this.path)) {
                 const products = await fs.promises.readFile(this.path, "utf-8");
                 const productsjs = JSON.parse(products);
+                this.products = productsjs
                 return productsjs;
             } else {
                 return []
@@ -34,17 +35,14 @@ class productManager {
         }
 
     }
-
+    todosLosProductos() {
+         if (!product.title || !product.description || !price || !thumbnail || !code || !stock) {
+            console.log("El producto está incompleto.");
+        } return true;
+    }
     async createProduct(product) {
         try {
             const productsFile = await this.getProducts();
-            function todosLosProductos() {
-
-                if (!title || !description || !price || !thumbnail || !code || !stock) {
-                    console.log("El producto está incompleto.");
-                } return true;
-
-            }
             let codeExists = this.products.some((element) => {
                 return element.code === product.code;
             });
@@ -63,12 +61,12 @@ class productManager {
                     stock: product.stock,
                     code: product.code
                 }
+                productsFile.push(newProduct);
+                this.#nextId++;
+                await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
+                return newProduct;
 
             }
-            productsFile.push(product);
-            this.#nextId++;
-            await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
-            return product;
         } catch (error) {
             console.log(error);
         }
@@ -194,7 +192,11 @@ const test = async () => {
     // await manager.createProduct(product2);
     // const getProducts3 = await manager.getProducts()
     // console.log("tercera compra: ", getProducts3);
-
+const productIdDelete = 1;
+await manager.deleteProduct(productIdDelete);
+console.log("producto eliminado con exito")
+const productsAfterDelete = await manager.getProducts();
+console.log("productos despues de eliminar: ", productsAfterDelete);
 }
 
 const testDeleteProduct = async () => {
@@ -208,7 +210,6 @@ const testDeleteProduct = async () => {
     console.log("productos despues de eliminar: ", productsAfterDelete)
 };
 
-testDeleteProduct();
 
 
 test()
