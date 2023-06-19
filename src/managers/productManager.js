@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export default class productManager {
+export default class ProductManager {
     constructor(path) {
         this.path = path;
     }
@@ -10,7 +10,7 @@ export default class productManager {
                 id: await this.#getMaxId() + 1,
                 ...obj
             }
-            const productsFile = await this.getProducts();
+            const productsFile = await this.getProduct();
             productsFile.push(product);
             await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
             return product;
@@ -20,7 +20,7 @@ export default class productManager {
     }
     async #getMaxId() {
         let maxId = 0;
-        const products = await this.getProducts();
+        const products = await this.getProduct();
         products.map((product) => {
             if (product.id > maxId) maxId = product.id;
         });
@@ -40,10 +40,10 @@ export default class productManager {
         }
     }
 
-    async getProductByID(id) {
+    async getProductById(id) {
         try {
-            const productsFile = await this.getProducts();
-            const product = productsFile.find((p) => u.id === id);
+            const productsFile = await this.getProduct();
+            const product = productsFile.find((p) => p.id === id);
             if (product) return product;
             else return false; 
         } catch (error) {
@@ -57,7 +57,7 @@ export default class productManager {
             if (index === -1) {
                 throw new Error("id not found");
             } else {
-                productFile[index] = { ...obj, id }
+                productsFile[index] = { ...obj, id }
             }
             await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
         } catch (error) {
