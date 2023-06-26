@@ -1,5 +1,8 @@
 import fs from "fs";
+import { Router } from "express";
+const router = Router();
 
+const products = [];
 export default class ProductManager {
     constructor(path) {
         this.path = path;
