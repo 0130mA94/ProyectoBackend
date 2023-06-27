@@ -1,6 +1,9 @@
 import { Router } from "express";
 const router = Router();
 import ProductManager from "../managers/productManager.js";
+import { userValidator } from "../middlewares/userValidator.js";
+import { logUrl } from "../middlewares/logUrl.js";
+
 const productManager = new ProductManager("./products.json");
 
 router.get("/search", async (req, res) => {
@@ -18,15 +21,16 @@ router.get("/search", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", [logUrl, userValidator], async (req, res) => {
     //console.log(req.body);
     try {
-        const { title, description, price, editorial } = req.body;
+        const { title, description, price, editorial, role } = req.body;
         const product = {
             title,
             description,
             price,
             editorial,
+            role
         }
         const newProduct = await productManager.createProduct(product);
         res.json(newProduct);
@@ -39,7 +43,7 @@ router.put("/:idProduct", async (req, res) => {
         const product = req.body;
         const { idProduct } = req.params;
         const idNumber = parseInt(idProduct);
-        const productExist = await productManager.getProductByID(parseInt(idProduct));
+        const productExist = await productManager.getProductById(parseInt(idProduct));
         if (productExist) {
             await productManager.updateProduct(product, idNumber);
             res.json({ message: `Product id: ${idNumber} updated` })
