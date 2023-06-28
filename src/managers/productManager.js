@@ -1,5 +1,6 @@
 import fs from "fs";
 import { Router } from "express";
+import { __dirname } from "../utils";
 const router = Router();
 
 const products = [];
