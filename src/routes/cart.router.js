@@ -3,6 +3,19 @@ router.post ( "/", async (req, res) => {
     res.json(newCart);
 })
 
-router.post("/:idCart/product/:idProduct", (req, res) =>{
-        
-} )
+router.post("/:idCart/product/:idProduct", async (req, res) =>{
+    try {
+        const { title, description, price, editorial, role } = req.body;
+        const cart= {
+            title,
+            description,
+            price,
+            editorial,
+            role
+        }
+        const newCart = await productManager.createProduct(cart);
+        res.json(newCart);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
