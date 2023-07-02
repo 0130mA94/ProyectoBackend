@@ -4,20 +4,44 @@ import ProductManager from "../managers/productManager.js";
 import { userValidator } from "../middlewares/userValidator.js";
 import { logUrl } from "../middlewares/logUrl.js";
 
+
 const productManager = new ProductManager("./products.json");
 
-router.get("/search", async (req, res) => {
+router.get('/', async(req, res)=>{
+    try {
+       const products = await productManager.getProduct();
+       res.status(200).json(products); 
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+});
+router.get("/:idProduct", async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await productManager.getProductById(Number(id));
-        if (product) {
-            res.json(product)
+        const products = await productManager.getProductById(Number(id));
+        res.status(200).json(products);
+        if (products) {
+            res.json(products)
         } else {
-            res.status(400).json({ message: "qué tas buscando? busca mejor amigo" })
+            res.status(400).json({ message: "products not found" })
         }
 
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/api/products/:id', async(req, res)=>{
+    try {
+        const { idProduct } = req.query;
+        const product= await userManager.getUserById(Number(idProduct));
+        if(product){
+            res.json(product)
+        } else {
+            res.status(400).json({message: 'Product not found'});
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 });
 
@@ -35,7 +59,7 @@ router.post("/", [logUrl, userValidator], async (req, res) => {
         const newProduct = await productManager.createProduct(product);
         res.json(newProduct);
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 router.put("/:idProduct", async (req, res) => {

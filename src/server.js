@@ -12,9 +12,12 @@ app.use(express.static( __dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use("/products",productRouter);
+app.use("./products.json",productRouter);
 
-app.listen(8080, () => {
-    console.log("Server ok on port 8080");
+
+const PORT = 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server ok on port ${PORT}`);
 });
 
