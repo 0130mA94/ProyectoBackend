@@ -3,6 +3,8 @@ import { Router } from "express";
 import { __dirname } from "../utils.js";
 const router = Router();
 
+const pathFile = __dirname + "./products.json";
+
 const products = [];
 export default class ProductManager {
     constructor(path) {

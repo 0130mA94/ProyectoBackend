@@ -12,8 +12,8 @@ app.use(express.static( __dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use("./products.json",productRouter);
-
+//app.use("./products.json",productRouter);
+app.use('/products', productRouter);
 
 const PORT = 8080;
 

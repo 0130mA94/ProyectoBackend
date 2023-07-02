@@ -1,3 +1,8 @@
+import { Router } from "express";
+import router from "./products.router";
+const router = Router ();
+
+
 router.post ( "/", async (req, res) => {
     const newCart = await productManager.createCart(cart);
     res.json(newCart);

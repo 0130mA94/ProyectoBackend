@@ -1,5 +1,6 @@
 import fs from "fs";
 import { __dirname } from "../utils.js"
+import {getProductById} from "./productManager.js";
 const router = __dirname + "../carts.json"
 
 
