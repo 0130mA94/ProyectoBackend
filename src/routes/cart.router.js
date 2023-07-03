@@ -1,6 +1,6 @@
 import { Router } from "express";
 import router from "./products.router";
-const router = Router ();
+const cartRouter = Router ();
 
 
 router.post ( "/", async (req, res) => {
@@ -24,3 +24,4 @@ router.post("/:idCart/product/:idProduct", async (req, res) =>{
         res.status(404).json({ message: error.message });
     }
 });
+export default cartRouter;
