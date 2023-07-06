@@ -15,9 +15,9 @@ router.get('/', async(req, res)=>{
         res.status(500).json({message: error.message});
     }
 });
-router.get("/:idProduct", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        const { id } = req.params;
+        const { idProduct } = req.params;
         const products = await productManager.getProductById(Number(id));
         res.status(200).json(products);
         if (products) {
@@ -31,19 +31,7 @@ router.get("/:idProduct", async (req, res) => {
     }
 });
 
-router.get('/api/products/:id', async(req, res)=>{
-    try {
-        const { idProduct } = req.query;
-        const product= await userManager.getUserById(Number(idProduct));
-        if(product){
-            res.json(product)
-        } else {
-            res.status(400).json({message: 'Product not found'});
-        }
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    }
-});
+
 
 router.post("/", [logUrl, userValidator], async (req, res) => {
     //console.log(req.body);
@@ -62,7 +50,7 @@ router.post("/", [logUrl, userValidator], async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-router.put("/:idProduct", async (req, res) => {
+router.put("/", async (req, res) => {
     try {
         const product = req.body;
         const { idProduct } = req.params;
@@ -79,7 +67,7 @@ router.put("/:idProduct", async (req, res) => {
     }
 });
 
-router.delete("/:productId", (req, res) => {
+router.delete("/", (req, res) => {
     try{
 
     }catch{

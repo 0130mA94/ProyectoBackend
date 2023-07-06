@@ -50,10 +50,10 @@ export default class ProductManager {
 };
 
 export const saveProductToCart = async (idCart, idProduct) => {
-    const cartsFile = await this.getCart();
+    const cartsFile = await getCart();
     const cartExist = await getCartById(idCart);
     const productExistsinJson = await getProductById(idProduct);
-    if(productExists){
+    if(productExistsinJson){
         if(cartExist) {
             const productExistsCart = cartExist.products.find(prod => prod.id === idProduct);
             if(productExistsCart){
