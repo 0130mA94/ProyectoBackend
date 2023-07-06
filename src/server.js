@@ -10,7 +10,7 @@ const __dirname = dirname (fileURLToPath (import.meta.url));
 //console.log(__dirname);
 
 const app = express();
-//app.use(express.static( __dirname + "/public")); 
+app.use(express.static( __dirname + "/public")); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -20,7 +20,7 @@ const PORT = 8080;
 app.set("views", __dirname + "/views")
 app.set("view engine", "handlebars");
 app.engine ("handlebars", handlebars.engine());
-app.get("/", (req, res) => {
+app.get("/realTimeProducts", (req, res) => {
     res.render("websockets")
 });
 
@@ -32,4 +32,14 @@ const socketServer = new Server(httpServer);
 
 socketServer.on("connection", (socket) => {
     console.log(`Usuario conectado: ${socket.id}`);
+
+    socket.on("disconnect", () => {
+        console.log("Usuario desconectado");
+    })
+
+    socket.emit ("testMessage", "mensaje de prueba")
+
+    socket.on("respuestaDesdeElFront", (message) =>{
+    console.log(message);
+})
 })
