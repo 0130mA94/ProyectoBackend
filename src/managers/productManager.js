@@ -1,14 +1,10 @@
 import fs from "fs";
-import { Router } from "express";
 import { __dirname } from "../utils.js";
-const router = Router();
+const pathFile = __dirname + "/../products.json";
 
-const pathFile = __dirname + "./products.json";
-
-const products = [];
 export default class ProductManager {
-    constructor(path) {
-        this.path = path;
+    constructor() {
+        this.path = pathFile;
     }
     async createProduct(obj) {
         try {
@@ -54,6 +50,7 @@ export default class ProductManager {
                 const productsJSON = JSON.parse(products);
                 return productsJSON;
             }else {
+                console.log('else')
                 return[];
             }
 
@@ -71,14 +68,15 @@ export default class ProductManager {
             console.log(error);
         }
     }
-    async updateProduct(obj, id) {
+    async updateProduct(newProduct, id) {
         try {
             const productsFile = await this.getProduct();
+            const oldProduct = await this.getProductById(id);
             const index = productsFile.findIndex(product => product.id === id);
             if (index === -1) {
                 throw new Error("id not found");
             } else {
-                productsFile[index] = { ...obj, id }
+                productsFile[index] = {...oldProduct ,...newProduct }
             }
             await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
         } catch (error) {
@@ -89,8 +87,9 @@ export default class ProductManager {
         try {
             const productsFile = await this.getProduct();
             if (productsFile.length > 0) {
-                const newArray = productsFile.filter(product => product.id !== id);
-                await fs.promises.writeFile(this.path, JSON.stringify(newArray));
+                const newProducts = productsFile.filter(product => product.id !== id);
+                await fs.promises.writeFile(this.path, JSON.stringify(newProducts));
+                return newProducts;
             } else {
                 throw new Error("Product not found");
             }

@@ -1,25 +1,29 @@
 import { Router } from "express";
 const router = Router();
 import ProductManager from "../managers/productManager.js";
-import { userValidator } from "../middlewares/userValidator.js";
 import { logUrl } from "../middlewares/logUrl.js";
+import { fieldsValidator } from "../middlewares/fieldsValidator.js";
 
 
-const productManager = new ProductManager("./products.json");
+const productManager = new ProductManager();
 
-router.get('/', async(req, res)=>{
+router.get('/', async (req, res) => {
     try {
-       const products = await productManager.getProduct();
-       res.status(200).json(products); 
+        const { limit } = req.query
+        if (limit) {
+            res.send('hay limite')
+        } else {
+            const products = await productManager.getProduct();
+            res.status(200).json(products);
+        }
     } catch (error) {
-        res.status(500).json({message: error.message});
+        res.status(500).json({ message: error.message });
     }
 });
-router.get("/", async (req, res) => {
+router.get("/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
-        const products = await productManager.getProductById(Number(id));
-        res.status(200).json(products);
+        const products = await productManager.getProductById(Number(idProduct));
         if (products) {
             res.json(products)
         } else {
@@ -33,16 +37,19 @@ router.get("/", async (req, res) => {
 
 
 
-router.post("/", [logUrl, userValidator], async (req, res) => {
+router.post("/", [logUrl, fieldsValidator], async (req, res) => {
     //console.log(req.body);
     try {
-        const { title, description, price, editorial, role } = req.body;
+        const { title, description, price, stock, code, category, thumbnails = [], status = true } = req.body;
         const product = {
             title,
             description,
             price,
-            editorial,
-            role
+            stock,
+            code,
+            category,
+            thumbnails,
+            status
         }
         const newProduct = await productManager.createProduct(product);
         res.json(newProduct);
@@ -50,7 +57,7 @@ router.post("/", [logUrl, userValidator], async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-router.put("/", async (req, res) => {
+router.put("/:idProduct", async (req, res) => {
     try {
         const product = req.body;
         const { idProduct } = req.params;
@@ -67,10 +74,13 @@ router.put("/", async (req, res) => {
     }
 });
 
-router.delete("/", (req, res) => {
-    try{
+router.delete("/:idProduct", async (req, res) => {
+    try {
+        const { idProduct } = req.params;
+        const newProducts= await productManager.deleteProduct(Number(idProduct))
+        res.status(200).json(newProducts);
 
-    }catch{
+    } catch {
         res.status(500).json({ message: error.message });
     }
 });

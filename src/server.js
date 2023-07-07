@@ -7,7 +7,6 @@ import cartRouter from "./routes/cart.router.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 const __dirname = dirname (fileURLToPath (import.meta.url));
-//console.log(__dirname);
 
 const app = express();
 app.use(express.static( __dirname + "/public")); 
@@ -15,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use('/api/products', productRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api/carts", cartRouter);
 const PORT = 8080;
 app.set("views", __dirname + "/views")
 app.set("view engine", "handlebars");
