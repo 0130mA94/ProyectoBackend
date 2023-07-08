@@ -5,3 +5,24 @@ socketClient.on("testMessage", (message) =>{
 
     socketClient.emit("respuestaDesdeElFront", "Muchas gracias")
 } )
+
+const form = document.getElementById("form");
+const inputName = document.getElementById("name");
+const inputPrice = document.getElementById ("price");
+const products = document.getElementById("products");
+
+
+form.onsubmit = (e) => {
+    const name = inputName.value;
+    const price = inputPrice.value;
+    socketClient.emit("newProduct", {name, price});
+}
+
+socketClient.on("arrayProducts", (array) => {
+    let infoProducts = "";
+   array.forEach((prod) => {
+        infoProducts += `${prdo.name} - ${prod.price} </br>` 
+       
+    });
+    products.innerHTML = infoProducts
+})
