@@ -30,7 +30,7 @@ app.get("/realTimeProducts", (req, res) => {
 app.use('/', viewsRouter);
 
 const httpServer = app.listen(PORT, () => {
-    console.log(`Server ok on port ${PORT}`);
+   console.log(`Server ok on port ${PORT}`);
 });
 
 
@@ -40,16 +40,16 @@ const products = [];
 const socketServer = new Server(httpServer);
 
 socketServer.on("connection", (socket) => {
-    console.log(`Usuario conectado: ${socket.id}`);
+    //console.log(`Usuario conectado: ${socket.id}`);
 
     socket.on("disconnect", () => {
-        console.log("Usuario desconectado");
+        //console.log("Usuario desconectado");
     })
 
     socket.emit ("testMessage", "mensaje de prueba")
 
     socket.on("respuestaDesdeElFront", (message) =>{
-    console.log(message);
+    //console.log(message);
 })
 
 socket.on("newProduct", (obj) =>{

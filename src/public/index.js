@@ -4,6 +4,7 @@ socketClient.on("testMessage", (message) =>{
     console.log(message);
 
     socketClient.emit("respuestaDesdeElFront", "Muchas gracias")
+    console.log("Hola")
 } )
 
 const form = document.getElementById("form");
@@ -21,7 +22,7 @@ form.onsubmit = (e) => {
 socketClient.on("arrayProducts", (array) => {
     let infoProducts = "";
    array.forEach((prod) => {
-        infoProducts += `${prdo.name} - ${prod.price} </br>` 
+        infoProducts += `${prod.name} - ${prod.price} </br>` 
        
     });
     products.innerHTML = infoProducts
