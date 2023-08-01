@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import viewsRouter from './routes/views.router.js';
 import { errorHandler } from "./middlewares/errorHandler.js";
+import "./db/connection.js"
 const __dirname = dirname (fileURLToPath (import.meta.url));
 
 const app = express();

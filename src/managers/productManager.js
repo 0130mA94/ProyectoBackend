@@ -1,10 +1,11 @@
 import fs from "fs";
 import { __dirname } from "../utils.js";
+import { ProductModel } from "../db/schema.js";
 const pathFile = __dirname + "/../products.json";
 
 export default class ProductManager {
     constructor() {
-        this.path = pathFile;
+        this.model = model; 
     }
     async createProduct(obj) {
         try {
