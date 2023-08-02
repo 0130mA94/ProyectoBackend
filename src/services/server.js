@@ -1,14 +1,14 @@
 import express from "express";
-import productRouter from "./routes/products.router.js";
+import productRouter from "../routes/products.router.js";
 import {dirname} from "path";
 import { fileURLToPath } from "url";
 import morgan from "morgan";
-import cartRouter from "./routes/cart.router.js";
+import cartRouter from "../routes/cart.router.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
-import viewsRouter from './routes/views.router.js';
-import { errorHandler } from "./middlewares/errorHandler.js";
-import "./db/connection.js"
+import viewsRouter from '../routes/views.router.js';
+import { errorHandler } from "../middlewares/errorHandler.js";
+import "../daos/mongodb/connection.js"
 const __dirname = dirname (fileURLToPath (import.meta.url));
 
 const app = express();

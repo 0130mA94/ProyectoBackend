@@ -1,8 +1,8 @@
-import fs from "fs";
+
 import { __dirname } from "../utils.js";
 const pathFile = __dirname + "/../products.json";
 
-export default class ProductManager {
+export default class ProductDaoFS {
     constructor(path) {
         this.path = path; 
     }
@@ -108,5 +108,3 @@ export default class ProductManager {
         }
     }
 }
-
-

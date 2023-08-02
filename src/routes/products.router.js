@@ -1,11 +1,33 @@
 import { Router } from "express";
+import * as controller from "../controllers/product.controllers.js"
 const router = Router();
 import ProductManager from "../managers/productManager.js";
 import { logUrl } from "../middlewares/logUrl.js";
 import { fieldsValidator } from "../middlewares/fieldsValidator.js";
 
+router.get("/", controller.getAll);
 
-const productManager = new ProductManager();
+router.get("/:id", controller.getById);
+
+router.post("/", controller.create);
+
+router.put("/:id", controller.update);
+
+router.delete("/:id", controller.remove);
+
+export default router;
+
+
+
+
+
+
+
+
+
+
+
+/*const productManager = new ProductManager();
 
 router.get('/', async (req, res) => {
     try {
@@ -85,4 +107,4 @@ router.delete("/:idProduct", async (req, res) => {
     }
 });
 
-export default router;
+export default router;*/
