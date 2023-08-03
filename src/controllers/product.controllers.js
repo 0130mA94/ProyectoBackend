@@ -2,7 +2,7 @@ import * as service from "../services/product.services.js"
 
 export const getAll = async (req, res, next) => {
     try {
-        const prods = await service.getAll();
+        const response = await service.getAllService();
         res. status(200).json(response);
     } catch (error){
         next(error.message); 
