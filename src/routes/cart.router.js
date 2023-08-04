@@ -1,11 +1,47 @@
 import { Router } from "express";
-import CartManager from "../managers/cart.manager.js";
+//import CartManager from "../managers/cart.manager.js";
+import * as controller from "../controllers/cart.cotrollers.js"
 
-
-const cartManager = new CartManager()
 const router = Router();
 
-router.post ( "/", async (req, res) => {
+router.get("/", controller.getAll);
+
+router.get("/:id", controller.getById);
+
+router.post("/", controller.create);
+
+router.put("/api/carts/:cid/products/:pid", controller.update);
+router.put("/api/carts/:cid", controller.update);
+
+router.delete("/api/carts/:cid/products/:pid", controller.remove);
+
+
+
+
+
+
+
+
+
+
+
+
+export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*router.post ( "/", async (req, res) => {
     const newCart = await cartManager.createCart();
     res.json(newCart);
 })
@@ -32,6 +68,4 @@ router.post("/:idCart/product/:idProduct", async (req, res) =>{
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
-});
-
-export default router;
+});*/

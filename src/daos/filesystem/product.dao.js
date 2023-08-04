@@ -12,8 +12,8 @@ export default class ProductDaoFS {
                 id: await this.#getMaxId() + 1,
                 ...obj
             }
-            const productsFile = await this.getProduct();
-            productsFile.push(product);
+            const productsFile = await this.get();
+            productsFile.push(product)
             await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
             return product;
         } catch (error) {
@@ -22,7 +22,7 @@ export default class ProductDaoFS {
     }
     async #getMaxId() {
         let maxId = 0;
-        const products = await this.getAllProducts();
+        const products = await this.getAll();
         products.map((product) => {
             if (product.id > maxId) maxId = product.id;
         });
@@ -43,7 +43,7 @@ export default class ProductDaoFS {
     }
 
 
-    async getAllProducts() {
+    async getAll() {
         try {
             if (fs.existsSync(pathFile)) {
                 const products = await fs.promises.readFile(pathFile, "utf8");
@@ -60,7 +60,7 @@ export default class ProductDaoFS {
     };
     async getProductById(id) {
         try {
-            const productsFile = await this.getProduct();
+            const productsFile = await this.get();
             const product = productsFile.find((p) => p.id === id);
             if (product) return product;
             else return false; 
@@ -70,8 +70,8 @@ export default class ProductDaoFS {
     }
     async updateProduct(newProduct, id) {
         try {
-            const productsFile = await this.getProduct();
-            const oldProduct = await this.getProductById(id);
+            const productsFile = await this.get();
+            const oldProduct = await this.getById(id);
             const index = productsFile.findIndex(product => product.id === id);
             if (index === -1) {
                 throw new Error("id not found");
@@ -85,7 +85,7 @@ export default class ProductDaoFS {
     }
     async deleteProduct(id) {
         try {
-            const productsFile = await this.getProduct();
+            const productsFile = await this.get();
             if (productsFile.length > 0) {
                 const newProducts = productsFile.filter(product => product.id !== id);
                 await fs.promises.writeFile(this.path, JSON.stringify(newProducts));
@@ -98,13 +98,4 @@ export default class ProductDaoFS {
         }
     }
 
-    async deleteAllProducts () {
-        try {
-            if (fs.existsSync(pathFile)) {
-                await fs.promises.unlink(pathFile)
-            }
-        } catch (error){
-            console.log(error);
-        }
-    }
 }
