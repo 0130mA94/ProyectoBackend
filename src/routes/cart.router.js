@@ -10,8 +10,8 @@ router.get("/:id", controller.getById);
 
 router.post("/", controller.create);
 
-router.put("/api/carts/:cid/products/:pid", controller.update);
-router.put("/api/carts/:cid", controller.update);
+router.put("/api/carts/:cid/products/:pid", controller.getById);
+router.put("/api/carts/:cid", controller.getById);
 
 router.delete("/api/carts/:cid/products/:pid", controller.remove);
 

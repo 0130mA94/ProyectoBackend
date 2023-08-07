@@ -1,9 +1,9 @@
 import { ProductModel } from "./models/product.model.js";
 
 export default class ProductDaoMongoDB {
-    async getAll (){
+    async getAll (limit = 0, skip = 0){
         try {
-            const response = await ProductModel.find({});
+            const response = await ProductModel.find({}).skip(skip).limit(limit);
             return response;
         } catch (error){
             console.log(error);

@@ -3,6 +3,12 @@ import * as service from "../services/product.services.js"
 export const getAll = async (req, res, next) => {
     try {
         const response = await service.getAllService();
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+        const page = parseInt(req.query.page)
+        
+        const ProductService = new ProductService ();
+        
         res. status(200).json(response);
     } catch (error){
         next(error.message); 
@@ -33,7 +39,7 @@ export const create = async (req, res, next) => {
 export const update = async (req, res, next) => {
     try {
         const prodUpd= await service.update(id, obj);
-        return prodUpd;
+       res.status(200).json(item);
     } catch (error){
         next(error.message)
     }
@@ -48,3 +54,4 @@ export const remove = async (req, res, next) => {
         next(error.message)
     }
 };
+

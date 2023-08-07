@@ -1,5 +1,5 @@
 import * as service from "../services/cart.services.js"  
-
+const products = [];
 export const getAll = async (req, res, next) => {
     try {
         const response = await service.getAllService();

@@ -4,8 +4,8 @@ import { CartModel } from "./models/cart.model.js";
 export default class CartDaoMongoDB {
     async getAll (){
         try {
-            return response;
             const response = await CartModel.find({});
+            return response;
         } catch (error){
             console.log(error);
         }
