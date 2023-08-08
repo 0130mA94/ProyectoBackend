@@ -7,16 +7,25 @@ import cartRouter from "../routes/cart.router.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import viewsRouter from '../routes/views.router.js';
+import loginRouter from "../routes/login.router.js"
 import { errorHandler } from "../middlewares/errorHandler.js";
 import "../daos/mongodb/connection.js"
-const __dirname = dirname (fileURLToPath (import.meta.url));
+import cookieParser from "cookie-parser";
+import { __dirname } from "../utils.js";
+//const __dirname = dirname (fileURLToPath (import.meta.url));
 
+
+const cookieKey = "1234"
 const app = express();
 app.use(express.static( __dirname + "/public")); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use( errorHandler );
+app.use(cookieParser(cookieKey));
+
+app.use("/login", loginRouter)
+app.use("/", viewsRouter);
 
 app.use('/api/products', productRouter);
 app.use("/api/carts", cartRouter);
