@@ -6,7 +6,7 @@ export default class ProductDaoMongoDB {
             const response = await ProductModel.find({}).skip(skip).limit(limit);
             return response;
         } catch (error){
-            console.log(error);
+            console.log(error); 
         }
     }
     async getProductById (id){
