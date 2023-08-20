@@ -1,69 +1,70 @@
 import express from "express";
 import productRouter from "../routes/products.router.js";
-import {dirname} from "path";
+import { dirname } from "path";
 import { fileURLToPath } from "url";
 import morgan from "morgan";
 import cartRouter from "../routes/cart.router.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
-import viewsRouter from '../routes/views.router.js';
-import loginRouter from "../routes/login.router.js"
+import viewsRouter from "../routes/views.router.js";
+import loginRouter from "../routes/login.router.js";
 import { errorHandler } from "../middlewares/errorHandler.js";
-import "../daos/mongodb/connection.js"
+import "../daos/mongodb/connection.js";
 import cookieParser from "cookie-parser";
 import { __dirname } from "../utils.js";
+import { createHash } from "crypto";
+import userRouter from "../routes/user.router.js";
+
 //const __dirname = dirname (fileURLToPath (import.meta.url));
 
-
-const cookieKey = "1234"
+const cookieKey = "1234";
 const app = express();
-app.use(express.static( __dirname + "/public")); 
+app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use( errorHandler );
+app.use(errorHandler);
 app.use(cookieParser(cookieKey));
 
-app.use("/login", loginRouter)
+app.use("/users", userRouter);
+app.use("/login", loginRouter);
 app.use("/", viewsRouter);
 
-app.use('/api/products', productRouter);
+app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 const PORT = 8080;
 
-app.set("views", __dirname + "/views")
+app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-app.engine ("handlebars", handlebars.engine());
+app.engine("handlebars", handlebars.engine());
 app.get("/realTimeProducts", (req, res) => {
-    res.render("websockets")
+  res.render("websockets");
 });
-app.use('/', viewsRouter);
+app.use("/", viewsRouter);
 
 const httpServer = app.listen(PORT, () => {
-   console.log(`Server ok on port ${PORT}`);
+  console.log(`Server ok on port ${PORT}`);
 });
 
-
 const products = [];
-
 
 const socketServer = new Server(httpServer);
 
 socketServer.on("connection", (socket) => {
-    //console.log(`Usuario conectado: ${socket.id}`);
+  //console.log(`Usuario conectado: ${socket.id}`);
 
-    socket.on("disconnect", () => {
-        //console.log("Usuario desconectado");
-    })
+  socket.on("disconnect", () => {
+    //console.log("Usuario desconectado");
+  });
 
-    socket.emit ("testMessage", "mensaje de prueba")
+  socket.emit("testMessage", "mensaje de prueba");
 
-    socket.on("respuestaDesdeElFront", (message) =>{
+  socket.on("respuestaDesdeElFront", (message) => {
     //console.log(message);
-})
+  });
 
-socket.on("newProduct", (obj) =>{
+  socket.on("newProduct", (obj) => {
     products.push(obj);
-    socketServer.emit("arrayProducts", products)
-})
-})
+    socketServer.emit("arrayProducts", products);
+  });
+});
