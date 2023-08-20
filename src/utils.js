@@ -20,5 +20,5 @@ export const createHash = (password) => hashSync(password, genSaltSync(10));
  * @param {*} password  string
  * @returns boolean
  */
-export const isValidPassword = (user, password) =>
-  compareSync(user.password, password);
+export const isValidPassword = (password, user) =>
+  compareSync(password, user.password);
