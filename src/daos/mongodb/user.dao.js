@@ -1,3 +1,4 @@
+import { getById } from "../../services/product.services.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import { UserModel } from "./models/user.model.js";
 
@@ -38,6 +39,27 @@ export default class UserDao {
       } else return false;
     } catch (error) {
       console.log(error);
+    }
+  }
+  async getById(id) {
+    try {
+      const userExist = await UserModel.findById(id);
+      if (userExist) return userExist;
+      else return false;
+    } catch (error) {
+      console.log(error);
+      // throw new Error(error)
+    }
+  }
+  async getByEmail(email) {
+    try {
+      const userExist = await UserModel.findOne({ email });
+      // console.log(userExist);
+      if (userExist) return userExist;
+      else return false;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
     }
   }
 }
